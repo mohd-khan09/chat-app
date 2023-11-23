@@ -74,7 +74,7 @@ export function GoogleButton(
     <Button
       {...props}
       color="white"
-      className="text-black border-teal-400"
+      className="text-black border-custom-teal focus:outline-none"
       leftSection={<GoogleIcon />}
     >
       Google

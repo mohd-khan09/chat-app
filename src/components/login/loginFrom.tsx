@@ -2,7 +2,6 @@ import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
-  PasswordInput,
   Text,
   Paper,
   Group,
@@ -44,7 +43,10 @@ export function AuthenticationForm(props: PaperProps) {
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
+      email: (val) =>
+        /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]{2,}$/.test(val)
+          ? null
+          : 'Invalid email adress',
       password: (val) =>
         val.length <= 6
           ? 'Password should include at least 6 characters'
@@ -219,7 +221,7 @@ export function AuthenticationForm(props: PaperProps) {
                 />
               </div>
               <div className="p-2">
-                <PasswordInput
+                <TextInput
                   required
                   label="Password"
                   placeholder="Your password"
@@ -278,7 +280,7 @@ export function AuthenticationForm(props: PaperProps) {
             </Anchor>
             <Button
               type="submit"
-              className="text-black bg-teal-300 focus:outline-none"
+              className="text-black bg-custom-teal focus:outline-none"
               radius="xl"
             >
               {upperFirst(type)}

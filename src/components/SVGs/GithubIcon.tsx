@@ -58,7 +58,7 @@ export function GithubButton(
     <Button
       {...props}
       color="white"
-      className="text-black border-teal-400"
+      className="text-black border-custom-teal focus:outline-none"
       leftSection={<GithubIcon />}
     >
       Github
