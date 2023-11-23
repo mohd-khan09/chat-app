@@ -30,6 +30,11 @@ export function AuthenticationForm(props: PaperProps) {
   const { StoreError, SetStoreError } = UseErrorStore();
   const [Loading, SetLoading] = useState(false);
   const [type, toggle] = useToggle(['login', 'register']);
+  // wherever you call toggle, reset the form
+  const handleToggle = () => {
+    toggle();
+    form.reset();
+  };
   const form = useForm({
     initialValues: {
       email: '',
@@ -157,6 +162,7 @@ export function AuthenticationForm(props: PaperProps) {
   const handleSocialLoginGithub = () => {
     SocialLoginGithub();
   };
+
   return (
     <>
       <Paper className="w-[440px]" radius="md" p="xl" withBorder {...props}>
@@ -254,7 +260,7 @@ export function AuthenticationForm(props: PaperProps) {
               component="button"
               type="button"
               c="dimmed"
-              onClick={() => toggle()}
+              onClick={handleToggle}
               size="xs"
               className="  
                   focus:outline-none"
