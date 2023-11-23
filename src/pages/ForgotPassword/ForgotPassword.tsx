@@ -15,13 +15,15 @@ import classes from './ForgotPassword.module.css';
 import supabase from '../../components/SupabaseCleint/supabaseclient';
 import UseErrorStore from '../../store';
 import { useForm } from '@mantine/form';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import MailAnimation from '../../components/Animations/mail.json';
 import Lottie from 'react-lottie-player';
+import Spinner from '../../components/SVGs/spinner';
 const ForgotPassword = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const [Loading, SetLoading] = useState(false);
   const navigate = useNavigate();
   const { StoreError, SetStoreError } = UseErrorStore();
 
@@ -38,11 +40,13 @@ const ForgotPassword = () => {
   });
   const { email } = form.values;
   const HandleSubmit = async (event: FormEvent) => {
+    SetLoading(true);
     event.preventDefault();
     const valid = form.validate();
     console.log(valid);
     if (valid.hasErrors) {
       console.error('Form validation failed');
+      SetLoading(false);
       return;
     }
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -58,6 +62,7 @@ const ForgotPassword = () => {
         autoHideDuration: 3000,
       });
       console.log('this is store error', StoreError);
+      SetLoading(false);
       return;
     }
     console.log('mail sent to reset password', data);
@@ -66,7 +71,9 @@ const ForgotPassword = () => {
       variant: 'success',
       autoHideDuration: 3000,
     });
+    SetLoading(false);
   };
+
   return (
     <Container size={460} my={30}>
       <form onSubmit={HandleSubmit}>
@@ -121,9 +128,14 @@ const ForgotPassword = () => {
             </Anchor>
             <Button
               type="submit"
-              className="text-black bg-teal-300 rounded-xl "
+              className="text-black bg-custom-teal rounded-xl focus:outline-none"
             >
               Reset password
+              {Loading && (
+                <div className="ml-2 ">
+                  <Spinner />
+                </div>
+              )}
             </Button>
           </Group>
         </Paper>

@@ -12,14 +12,16 @@ import { useForm } from '@mantine/form';
 import UseErrorStore from '../../store';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import classes from '../../pages/ForgotPassword/ForgotPassword.module.css';
 import Lottie from 'react-lottie-player';
 import LockAnimation from '../../components/Animations/lock.json';
+import Spinner from '../SVGs/spinner';
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { StoreError, SetStoreError } = UseErrorStore();
+  const [Loading, SetLoading] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
   const form = useForm({
     initialValues: {
@@ -35,11 +37,12 @@ const ResetPassword = () => {
 
   const HandleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-
+    SetLoading(true);
     const valid = form.validate();
     console.log(valid);
     if (valid.hasErrors) {
       console.error('Form validation failed');
+      SetLoading(false);
       return;
     }
     const { data, error } = await supabase.auth.updateUser({
@@ -54,6 +57,7 @@ const ResetPassword = () => {
         autoHideDuration: 3000,
       });
       console.log('store error:', StoreError);
+      SetLoading(false);
       return;
     }
     console.log('user password updated', data);
@@ -63,6 +67,7 @@ const ResetPassword = () => {
       autoHideDuration: 3000,
     });
     navigate('/');
+    SetLoading(false);
   };
 
   return (
@@ -105,9 +110,14 @@ const ResetPassword = () => {
           <div className="pt-4 width-[20px]">
             <Button
               type="submit"
-              className="text-black bg-teal-300 rounded-xl focus:outline-none  "
+              className="text-black bg-custom-teal rounded-xl focus:outline-none  "
             >
               Reset password
+              {Loading && (
+                <div className="ml-2 ">
+                  <Spinner />
+                </div>
+              )}
             </Button>
           </div>
         </form>
