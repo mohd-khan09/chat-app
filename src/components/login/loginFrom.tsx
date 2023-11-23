@@ -165,7 +165,14 @@ export function AuthenticationForm(props: PaperProps) {
 
   return (
     <>
-      <Paper className="w-[440px]" radius="md" p="xl" withBorder {...props}>
+      <Paper
+        className="w-[440px]"
+        shadow="md"
+        radius="md"
+        p="xl"
+        withBorder
+        {...props}
+      >
         <Text size="lg" fw={500}>
           Welcome to Mantine, {type} with
         </Text>

@@ -1,11 +1,21 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Button, PasswordInput, Stack } from '@mantine/core';
+import {
+  Button,
+  Container,
+  Paper,
+  PasswordInput,
+  Text,
+  Title,
+} from '@mantine/core';
 import supabase from '../SupabaseCleint/supabaseclient';
 import { useForm } from '@mantine/form';
 import UseErrorStore from '../../store';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { FormEvent } from 'react';
+import classes from '../../pages/ForgotPassword/ForgotPassword.module.css';
+import Lottie from 'react-lottie-player';
+import LockAnimation from '../../components/Animations/lock.json';
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -25,26 +35,7 @@ const ResetPassword = () => {
 
   const HandleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    // if (form.values.confirmPassword !== form.values.password) {
-    //   console.error('consloe error :Password should be same');
-    //   SetStoreError('Password do not match');
-    //   enqueueSnackbar({
-    //     message: StoreError,
-    //     variant: 'error',
-    //     autoHideDuration: 3000,
-    //   });
-    //   return;
-    // }
-    // if (password.length < 6) {
-    //   console.error('consloe error :Password should be at least 6 characters');
-    //   SetStoreError('Password should be at least 6 characters');
-    //   enqueueSnackbar({
-    //     message: StoreError,
-    //     variant: 'error',
-    //     autoHideDuration: 3000,
-    //   });
-    //   return;
-    // }
+
     const valid = form.validate();
     console.log(valid);
     if (valid.hasErrors) {
@@ -75,39 +66,53 @@ const ResetPassword = () => {
   };
 
   return (
-    <Stack>
-      <form onSubmit={HandleSubmit}>
-        <PasswordInput
-          label="Password"
-          defaultValue="secret"
-          visible={visible}
-          {...form.getInputProps('password')}
-          onVisibilityChange={toggle}
-          onChange={(event) =>
-            form.setFieldValue('password', event.currentTarget.value)
-          }
-          className="w-[350px]"
+    <Container size={460} my={30}>
+      <Paper withBorder shadow="md" p={20} radius="md" mt="md">
+        <Title className={classes.title} ta="center">
+          Forgot your password?
+        </Title>
+        <Text className="font-poppins  " c="dimmed" fz="sm" mt="xs">
+          dont worry we will reset your password
+        </Text>
+        <Lottie
+          loop
+          animationData={LockAnimation}
+          play
+          style={{ width: 350, height: 100 }}
         />
-        <PasswordInput
-          label="Confirm password"
-          defaultValue="secret"
-          visible={visible}
-          {...form.getInputProps('confirmPassword')}
-          onVisibilityChange={toggle}
-          onChange={(event) =>
-            form.setFieldValue('confirmPassword', event.currentTarget.value)
-          }
-        />
-        <div className="pt-4 width-[20px]">
-          <Button
-            type="submit"
-            className="text-black bg-teal-300 rounded-xl focus:outline-none  "
-          >
-            Reset password
-          </Button>
-        </div>
-      </form>
-    </Stack>
+        <form onSubmit={HandleSubmit}>
+          <PasswordInput
+            label="Password"
+            defaultValue="secret"
+            visible={visible}
+            {...form.getInputProps('password')}
+            onVisibilityChange={toggle}
+            onChange={(event) =>
+              form.setFieldValue('password', event.currentTarget.value)
+            }
+            className="w-[350px]"
+          />
+          <PasswordInput
+            label="Confirm password"
+            defaultValue="secret"
+            visible={visible}
+            {...form.getInputProps('confirmPassword')}
+            onVisibilityChange={toggle}
+            onChange={(event) =>
+              form.setFieldValue('confirmPassword', event.currentTarget.value)
+            }
+          />
+          <div className="pt-4 width-[20px]">
+            <Button
+              type="submit"
+              className="text-black bg-teal-300 rounded-xl focus:outline-none  "
+            >
+              Reset password
+            </Button>
+          </div>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 

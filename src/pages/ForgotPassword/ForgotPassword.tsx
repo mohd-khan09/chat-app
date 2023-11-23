@@ -18,7 +18,8 @@ import { useForm } from '@mantine/form';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-
+import MailAnimation from '../../components/Animations/mail.json';
+import Lottie from 'react-lottie-player';
 const ForgotPassword = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -68,14 +69,22 @@ const ForgotPassword = () => {
   };
   return (
     <Container size={460} my={30}>
-      <Title className={classes.title} ta="center">
-        Forgot your password?
-      </Title>
-      <Text c="dimmed" fz="sm">
-        Enter your email to get a reset link
-      </Text>
       <form onSubmit={HandleSubmit}>
-        <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
+        <Paper withBorder shadow="md" p={30} radius="md" mt="md">
+          <Title className={classes.title} ta="center">
+            Forgot your password?
+          </Title>
+          <Text className="font-poppins  " c="dimmed" fz="sm">
+            Enter your email to get a reset link
+          </Text>
+          <div>
+            <Lottie
+              loop
+              animationData={MailAnimation}
+              play
+              style={{ width: 350, height: 100 }}
+            />
+          </div>
           <TextInput
             label="Your email adress"
             placeholder="me@mantine.dev"
