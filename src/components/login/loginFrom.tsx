@@ -235,7 +235,7 @@ export function AuthenticationForm(props: PaperProps) {
                   }
                   radius="md"
                 />
-                <div className="pl-2 mt-2">
+                <div className="mt-2 pl-2">
                   {type === 'login' && (
                     <Anchor
                       component="button"
@@ -280,7 +280,7 @@ export function AuthenticationForm(props: PaperProps) {
             </Anchor>
             <Button
               type="submit"
-              className="text-black bg-custom-teal focus:outline-none"
+              className="bg-custom-teal text-black focus:outline-none"
               radius="xl"
             >
               {upperFirst(type)}

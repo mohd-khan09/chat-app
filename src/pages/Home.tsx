@@ -12,7 +12,11 @@ const Home = () => {
   return (
     <div>
       <h1>home page </h1>
-      <Rectangle />
+      <Rectangle
+        name="John Doe"
+        nickName="@john_doe123"
+        profilePictureSrc="path_to_image.jpg"
+      />
       <button onClick={HandleClick}>logout</button>
     </div>
   );

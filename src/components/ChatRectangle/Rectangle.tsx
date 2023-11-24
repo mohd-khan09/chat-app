@@ -10,8 +10,8 @@ interface RectangleBoxProps {
   profilePictureSrc: string;
 }
 const Rectangle: React.FC<RectangleBoxProps> = ({
-  name = 'Saleha ',
-  nickName = '@saleha_123 scasdcasca',
+  name,
+  nickName,
   profilePictureSrc,
 }) => {
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState(-1);
