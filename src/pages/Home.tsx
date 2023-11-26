@@ -1,3 +1,4 @@
+import ChatNavBar from '../components/ChatNavBar/ChatNavBar';
 import Rectangle from '../components/ChatRectangle/Rectangle';
 import supabase from '../components/SupabaseCleint/supabaseclient';
 
@@ -10,13 +11,14 @@ const Home = () => {
     }
   };
   return (
-    <div>
-      <h1>home page </h1>
+    <div className=" ">
       <Rectangle
         name="John Doe"
         nickName="@john_doe123"
         profilePictureSrc="path_to_image.jpg"
       />
+
+      <ChatNavBar />
       <button onClick={HandleClick}>logout</button>
     </div>
   );

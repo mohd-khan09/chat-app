@@ -60,10 +60,10 @@ const Rectangle: React.FC<RectangleBoxProps> = ({
         alt=""
         src={profilePictureSrc}
       />
-      <b className="absolute left-[56px] top-[14px] h-[9.1px]  w-[155px]  pl-[20px] text-left text-[18px]">
+      <b className="absolute left-[56px] top-[14px] h-[9.1px]  w-[180px]  pl-[20px] text-left text-[18px]">
         <p>{name}</p>
       </b>
-      <div className="absolute left-[40px] top-[35px]  h-3 w-[220px]  text-[15px] font-extralight">
+      <div className="absolute left-[75px] top-[35px]  h-3 w-[180px]  text-left text-[15px] font-extralight">
         <p> {nickName}</p>
       </div>
       <Indicator
