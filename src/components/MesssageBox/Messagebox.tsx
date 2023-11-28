@@ -11,7 +11,7 @@ const Messagebox: React.FC<MessageboxProps> = ({
   messageText,
 }) => {
   return (
-    <div className="  h-[94.8px] w-[306px]  rounded-b border-b  border-gray-300  text-[34px] font-medium text-black ">
+    <div className="  h-[94.8px] w-[330px]  rounded-b border-b  border-gray-300  text-[34px] font-medium text-black ">
       <div className=" flex  pl-[15px] pt-[17.3px]">
         <img
           className="h-[60px] w-[60px]  rounded-[50%] object-cover  "

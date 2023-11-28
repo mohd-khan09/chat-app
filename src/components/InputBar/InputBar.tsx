@@ -7,7 +7,7 @@ const InputBar = () => {
       <TextInput
         size="md"
         variant="filled"
-        radius="xl"
+        radius="lg"
         placeholder="Search chats"
         className="focus:outline-none"
         leftSection={<IconSearch size={18} strokeWidth={1.5} />}
