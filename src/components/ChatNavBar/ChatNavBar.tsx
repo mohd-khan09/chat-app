@@ -14,7 +14,7 @@ const ChatNavBar = () => {
         />
       </div>
 
-      <h1 className="flex w-[850px] items-center   pl-[35px] text-[27px] font-medium text-white ">
+      <h1 className="flex w-full items-center   pl-[35px] text-[27px] font-medium text-white ">
         Moahmmed khan
       </h1>
       <div className=" flex w-[190px] items-center justify-end  ">
