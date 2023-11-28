@@ -12,7 +12,7 @@ export function InputWithButton(props: TextInputProps) {
   //   );
   // };
   return (
-    <div className=" w-[1100px] ">
+    <div className=" w-full ">
       <TextInput
         radius="md"
         size="xl"
