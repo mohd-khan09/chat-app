@@ -1,14 +1,22 @@
 import { TextInput, TextInputProps, ActionIcon, rem } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import SendButtonChat from '../SVGs/SendButtonChat';
+// import EmojiPicker from 'emoji-picker-react';
 
 export function InputWithButton(props: TextInputProps) {
+  // const HandleClick = () => {
+  //   return (
+  //     <div>
+  //       <EmojiPicker />
+  //     </div>
+  //   );
+  // };
   return (
     <div className=" w-[1100px] ">
       <TextInput
         radius="md"
         size="xl"
-        placeholder="Search questions"
+        placeholder="Type a message"
         rightSectionWidth={42}
         leftSection={
           <IconSearch
@@ -17,7 +25,7 @@ export function InputWithButton(props: TextInputProps) {
           />
         }
         rightSection={
-          <ActionIcon className="focus:outline-none">
+          <ActionIcon className="pr-[34px] focus:outline-none">
             <SendButtonChat />
           </ActionIcon>
         }

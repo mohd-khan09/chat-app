@@ -1,24 +1,31 @@
+import { Button } from '@mantine/core';
+import DotMenu from '../DotMenu/Menu';
 import CallIcon from '../SVGs/CallIcon';
 import VideoCallIcon from '../SVGs/VideoCallIcon';
-import ThreeDots from '../SVGs/three-dots-vertical';
 
 const ChatNavBar = () => {
   return (
     <div className="flex ">
-      <div className=" flex h-[90px] w-[1100px] flex-shrink-[0] rounded-[10px] bg-darkgreen pl-[34px] pt-[15px]">
-        <img
-          className="h-[60px] w-[60px] rounded-[50%] object-cover"
-          alt=""
-          src="avatar6.jpg"
-        />
-        <h1 className="pl-[35px] pt-[14px] text-[27px] font-medium text-white ">
+      <div className=" flex h-[80px] w-[1100px] flex-shrink-[0] rounded-[10px] bg-darkgreen pl-[34px] ">
+        <div className="flex items-center">
+          <img
+            className=" h-[60px] w-[60px] items-center rounded-[50%] object-cover"
+            alt=""
+            src="avatar6.jpg"
+          />
+        </div>
+
+        <h1 className="flex w-[850px] items-center   pl-[35px] text-[27px] font-medium text-white ">
           Moahmmed khan
         </h1>
-        <div className="ml-[550px] flex w-[190px] items-center justify-between pb-[16px] ">
-          <CallIcon />
-
-          <VideoCallIcon />
-          <ThreeDots />
+        <div className=" flex w-[190px] items-center justify-end  ">
+          <Button className="focus:outline-none">
+            <CallIcon />
+          </Button>
+          <Button className="focus:outline-none">
+            <VideoCallIcon />
+          </Button>
+          <DotMenu />
         </div>
       </div>
     </div>

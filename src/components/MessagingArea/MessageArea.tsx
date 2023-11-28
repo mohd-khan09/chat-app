@@ -1,4 +1,3 @@
-import React from 'react';
 import MessageWithPhotoReciver from '../MessageWithPhoto/MessageWithPhoto';
 import { ScrollArea } from '@mantine/core';
 const MessageArea = () => {
