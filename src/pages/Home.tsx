@@ -5,7 +5,7 @@ import MessageArea from '../components/MessagingArea/MessageArea';
 
 const Home = () => {
   return (
-    <div className="flex ">
+    <div className="flex   w-full ">
       <div className="h-full ">
         <Rectangle
           name="John Doe"
@@ -13,7 +13,7 @@ const Home = () => {
           profilePictureSrc="path_to_image.jpg"
         />
       </div>
-      <div className="w-full  pl-[20px] ">
+      <div className="h-full w-full  pl-[20px] ">
         <ChatNavBar />
         <MessageArea />
         <InputWithButton />

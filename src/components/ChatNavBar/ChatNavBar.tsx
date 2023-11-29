@@ -2,8 +2,10 @@ import { Button } from '@mantine/core';
 import DotMenu from '../DotMenu/Menu';
 import CallIcon from '../SVGs/CallIcon';
 import VideoCallIcon from '../SVGs/VideoCallIcon';
+import { UserDataStore } from '../../store';
 
 const ChatNavBar = () => {
+  const { selectedUser } = UserDataStore();
   return (
     <div className=" flex h-[80px] w-full flex-shrink-[0] rounded-[10px] bg-darkgreen ">
       <div className="flex items-center">
@@ -15,7 +17,7 @@ const ChatNavBar = () => {
       </div>
 
       <h1 className="flex w-full items-center   pl-[35px] text-[27px] font-medium text-white ">
-        Moahmmed khan
+        {selectedUser ? selectedUser.userName : 'No user selected'}
       </h1>
       <div className=" flex w-[190px] items-center justify-end  ">
         <Button className="focus:outline-none">

@@ -19,7 +19,7 @@ import supabase from '../SupabaseCleint/supabaseclient';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import UseErrorStore from '../../store';
+import { UseErrorStore } from '../../store';
 import Spinner from '../SVGs/spinner';
 import { useSnackbar } from 'notistack';
 
