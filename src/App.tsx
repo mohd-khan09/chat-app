@@ -11,6 +11,9 @@ import ResetPassword from './components/resetPassword/resetpassword';
 import { SnackbarProvider } from 'notistack';
 import { useEffect, useState } from 'react';
 import supabase from './components/SupabaseCleint/supabaseclient';
+// import io from 'socket.io-client';
+
+// const socket = io('http://localhost:3001');
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

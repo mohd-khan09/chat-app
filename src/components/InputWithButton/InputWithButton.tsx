@@ -1,9 +1,22 @@
 import { TextInput, TextInputProps, ActionIcon, rem } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import SendButtonChat from '../SVGs/SendButtonChat';
+import {
+  MessageListStore,
+  useChatRoomIdStore,
+  useMessageStore,
+  useSocketStore,
+} from '../../store';
 // import EmojiPicker from 'emoji-picker-react';
 
 export function InputWithButton(props: TextInputProps) {
+  const { chatRoomId } = useChatRoomIdStore();
+  const { socket } = useSocketStore();
+  const { message } = useMessageStore();
+  const { setMessageToList } = MessageListStore();
+  const parsedData = JSON.parse(
+    localStorage.getItem('sb-bqeerxqeupnwlcywxfml-auth-token') || ''
+  );
   // const HandleClick = () => {
   //   return (
   //     <div>
@@ -11,6 +24,23 @@ export function InputWithButton(props: TextInputProps) {
   //     </div>
   //   );
   // };
+  const sendMessage = async () => {
+    if (message !== '' && message !== null) {
+      const messageData = {
+        room: chatRoomId,
+        Author: parsedData.user.user_metadata.email,
+        message: message,
+        time:
+          new Date(Date.now()).getHours() +
+          ':' +
+          new Date(Date.now()).getMinutes(),
+      };
+      socket?.emit('send_message', messageData);
+      setMessageToList(messageData);
+    }
+  };
+
+  console.log('chatroom id from zustand', chatRoomId);
   return (
     <div className=" w-full ">
       <TextInput
@@ -25,7 +55,10 @@ export function InputWithButton(props: TextInputProps) {
           />
         }
         rightSection={
-          <ActionIcon className="pr-[34px] focus:outline-none">
+          <ActionIcon
+            className="pr-[34px] focus:outline-none"
+            onClick={sendMessage}
+          >
             <SendButtonChat />
           </ActionIcon>
         }
