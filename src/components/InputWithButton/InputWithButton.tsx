@@ -1,5 +1,4 @@
-import { TextInput, TextInputProps, ActionIcon, rem } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
+import { TextInput, TextInputProps, ActionIcon } from '@mantine/core';
 import SendButtonChat from '../SVGs/SendButtonChat';
 import {
   MessageListStore,
@@ -7,23 +6,56 @@ import {
   useMessageStore,
   useSocketStore,
 } from '../../store';
+import AttachIcon from '../SVGs/Attach';
+import { useRef, useState } from 'react';
 // import EmojiPicker from 'emoji-picker-react';
 
 export function InputWithButton(props: TextInputProps) {
   const { chatRoomId } = useChatRoomIdStore();
   const { socket } = useSocketStore();
-  const { message } = useMessageStore();
+  const { message, setMessage } = useMessageStore();
   const { setMessageToList } = MessageListStore();
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const parsedData = JSON.parse(
     localStorage.getItem('sb-bqeerxqeupnwlcywxfml-auth-token') || ''
   );
-  // const HandleClick = () => {
-  //   return (
-  //     <div>
-  //       <EmojiPicker />
-  //     </div>
-  //   );
-  // };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const maxLength = 20;
+    const inputValue = event.target.value;
+
+    let brokenMessage = '';
+    if (!inputValue.includes(' ')) {
+      for (let i = 0; i < inputValue.length; i += maxLength) {
+        brokenMessage += inputValue.substring(i, i + maxLength) + '\n';
+      }
+      setMessage(brokenMessage.trim());
+    } else {
+      setMessage(inputValue);
+    }
+    const typingData = {
+      room: chatRoomId,
+      Author: parsedData.user.user_metadata.email,
+    };
+
+    if (!isTyping) {
+      socket?.emit('User_typing', typingData);
+      console.log('User_typing emitted by', typingData);
+      setIsTyping(true);
+    }
+    // If already waiting, clear the previous timeout
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+    // Set a timeout to emit 'stopped typing' event after 3 second of inactivity
+
+    typingTimeoutRef.current = setTimeout(() => {
+      socket?.emit('stopped_typing', typingData);
+      setIsTyping(false);
+      console.log('stopped_typing emitted', typingData);
+    }, 2000);
+  };
   const sendMessage = async () => {
     if (message !== '' && message !== null) {
       const messageData = {
@@ -37,28 +69,23 @@ export function InputWithButton(props: TextInputProps) {
       };
       socket?.emit('send_message', messageData);
       setMessageToList(messageData);
+      setMessage('');
     }
   };
 
-  console.log('chatroom id from zustand', chatRoomId);
+  // console.log('chatroom id from zustand', chatRoomId);
   return (
     <div className=" w-full ">
       <TextInput
         radius="md"
         size="xl"
         placeholder="Type a message"
-        rightSectionWidth={42}
-        leftSection={
-          <IconSearch
-            style={{ width: rem(18), height: rem(18) }}
-            stroke={1.5}
-          />
-        }
+        rightSectionWidth={82}
+        leftSection={<AttachIcon />}
+        value={message || ''}
+        onChange={handleInputChange}
         rightSection={
-          <ActionIcon
-            className="pr-[34px] focus:outline-none"
-            onClick={sendMessage}
-          >
+          <ActionIcon className="  focus:outline-none " onClick={sendMessage}>
             <SendButtonChat />
           </ActionIcon>
         }

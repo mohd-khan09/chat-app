@@ -41,7 +41,11 @@ interface ChatRoomIdStore {
   chatRoomId: string;
   setChatRoomId: (roomId: string) => void;
 }
-interface Message {
+interface TypingStore {
+  isTyping: boolean; // Assuming isTyping is a boolean
+  setTypingStatus: (isTyping: boolean) => void; // Setter function
+}
+export interface Message {
   room: string;
   Author: string;
   message: string;
@@ -50,7 +54,26 @@ interface Message {
 interface messageStore {
   messageList: Message[]; // Adjust the type as per your message structure
   setMessageToList: (message: Message) => void;
+  resetMessageList: () => void;
 }
+
+// interface OnlineUserStore {
+//   userNames: string[];
+//   addUser: (userName: string) => void;
+//   removeUser: (userName: string) => void;
+//   users: User[];
+//   addUser: (user: User) => void;
+// }
+interface OnlineUserStore {
+  onlineUsers: string[];
+  setOnlineUsers: (users: string[]) => void;
+}
+
+export const OnlineUsersStore = create<OnlineUserStore>((set) => ({
+  onlineUsers: [],
+  setOnlineUsers: (users) => set({ onlineUsers: users }),
+}));
+
 export const UseErrorStore = create<ErrorState>((set) => ({
   StoreError: null,
   SetStoreError: (error: string) =>
@@ -90,4 +113,9 @@ export const MessageListStore = create<messageStore>((set) => ({
       ...state,
       messageList: [...state.messageList, message],
     })),
+  resetMessageList: () => set({ messageList: [] }),
+}));
+export const useTypingStore = create<TypingStore>((set) => ({
+  isTyping: false,
+  setTypingStatus: (isTyping) => set({ isTyping }),
 }));

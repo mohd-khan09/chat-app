@@ -1,31 +1,72 @@
 import { useEffect, useRef } from 'react';
-import { MessageListStore, useSocketStore } from '../../store';
-
+import {
+  MessageListStore,
+  UserDataStore,
+  useSocketStore,
+  useTypingStore,
+} from '../../store';
+import { Message } from '../../store';
 const MessageWithPhoto = () => {
-  const { messageList, setMessageToList } = MessageListStore();
+  const { messageList, setMessageToList, resetMessageList } =
+    MessageListStore();
+  const { selectedUser } = UserDataStore();
+  const { setTypingStatus } = useTypingStore();
+  // const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { socket } = useSocketStore();
+
   useEffect(() => {
-    socket?.on('recive_message', (data) => {
+    const messageListener = (data: Message) => {
       console.log('data from message area', data);
       setMessageToList(data);
-      //
+    };
+
+    socket?.on('recive_message', messageListener);
+
+    socket?.on('userTyping', (typingData) => {
+      console.log(typingData.Author + ' is typing...');
+      // setIsTyping(true);
+      setTypingStatus(true);
+      // Here you can set state or call a function to update your UI
     });
-  }, [setMessageToList, socket]);
+
+    // Listen for 'stopped_typing' event
+    socket?.on('userStoppedTyping', (typingData) => {
+      console.log(typingData.Author + ' stopped typing...');
+      // setIsTyping(false);
+      setTypingStatus(false);
+      // Here you can set state or call a function to update your UI
+    });
+
+    return () => {
+      socket?.off('recive_message', messageListener);
+      socket?.off('userTyping');
+      socket?.off('userStoppedTyping');
+      resetMessageList();
+    };
+  }, [
+    resetMessageList,
+    setMessageToList,
+    socket,
+    selectedUser,
+    setTypingStatus,
+  ]);
   const parsedData = JSON.parse(
     localStorage.getItem('sb-bqeerxqeupnwlcywxfml-auth-token') || ''
   );
   const CurrentUserEmail = parsedData.user.user_metadata.email;
+  const CurrentUserPhoto = parsedData.user.user_metadata.avatar_url;
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messageList]);
-
+  // console.log('istypoing', isTyping);
   return (
     <>
       {messageList.map((message, index) => (
         <div
           key={index}
-          className={`flex h-full w-full pb-[20px]  ${
+          className={`flex h-full w-full pb-[20px] pt-[10px] ${
             message.Author === CurrentUserEmail
               ? 'justify-end'
               : 'justify-start'
@@ -34,16 +75,19 @@ const MessageWithPhoto = () => {
           {message.Author === CurrentUserEmail ? (
             <>
               <div className="mr-[15px] mt-[25px]">
-                <p className="flex max-w-[600px] flex-grow rounded-[10px] bg-white pb-[14px] pl-[21px] pr-[12px] pt-[10.5px] leading-5">
+                <p className="flex max-w-[600px] flex-grow rounded-[10px] bg-darkgreen pb-[14px] pl-[21px] pr-[12px] pt-[10.5px] text-left  leading-5 ">
                   {message.message}
                 </p>
               </div>
-              <div className="flex-shrink-0 pr-[20px]">
+              <div className="flex-shrink-0 pr-[20px] ">
                 <img
-                  className="h-[60px] w-[60px]  rounded-[50%] object-cover"
+                  className="h-[60px] w-[60px]   rounded-[50%] object-cover"
                   alt=""
-                  src="avatar1.jpg"
+                  src={CurrentUserPhoto}
                 />
+                <div className="pt-[6px]">
+                  <p className="rounded-md bg-dimgreen ">{message.time}</p>
+                </div>
               </div>
             </>
           ) : (
@@ -52,8 +96,11 @@ const MessageWithPhoto = () => {
                 <img
                   className="h-[60px] w-[60px] rounded-[50%] object-cover"
                   alt=""
-                  src="avatar6.jpg"
+                  src={selectedUser?.user_metadata.avatar_url}
                 />
+                <div className="pt-[6px]">
+                  <p className="rounded-md bg-dimgreen ">{message.time}</p>
+                </div>
               </div>
               <div className="ml-[15px] mt-[25px] ">
                 <p className="flex  max-w-[600px] flex-grow   rounded-[10px] bg-white pb-[14px] pl-[21px] pr-[12px] pt-[10.5px] leading-5">
