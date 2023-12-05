@@ -3,6 +3,7 @@ import BellSvg from '../SVGs/bell.svg';
 import InputBar from '../InputBar/InputBar';
 import Messagebox from '../MesssageBox/Messagebox';
 import { useEffect, useRef, useState } from 'react';
+import Avatarr from 'react-avatar';
 // import supabase from '../SupabaseCleint/supabaseclient';
 import {
   ListOfAllUersStore,
@@ -30,7 +31,8 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   const parsedData = JSON.parse(
     localStorage.getItem('sb-bqeerxqeupnwlcywxfml-auth-token') || ''
   );
-  const CurrentUserEmail = parsedData.user.user_metadata.email;
+  const CurrentUserEmail =
+    parsedData.user.user_metadata.email || parsedData.user.email;
   useEffect(() => {
     const socketIo = io('http://localhost:3001');
     socketIo.emit('user_online', { username: CurrentUserEmail });
@@ -56,7 +58,12 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
       if (error) {
         console.log(error);
       } else {
-        setUserss(users);
+        setUserss(
+          users.map((user) => ({
+            ...user,
+            email: user.email || '',
+          }))
+        );
       }
     };
     fetchUsers();
@@ -69,13 +76,17 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
     });
   }, [setOnlineUsers, socket]);
 
-  const name = parsedData.user.user_metadata.full_name;
+  const name =
+    parsedData.user.user_metadata.full_name ||
+    parsedData.user.email.split('@')[0];
   const truncatedName = name.length > 15 ? `${name.slice(0, 15)}...` : name;
   const nickName =
     parsedData.user.user_metadata.user_name ||
-    parsedData.user.user_metadata.email;
+    parsedData.user.user_metadata.email ||
+    parsedData.user.email;
   const profilePictureSrc = parsedData.user.user_metadata.avatar_url;
-  const CurrentUserId = parsedData.user.user_metadata.email;
+  const CurrentUserId =
+    parsedData.user.user_metadata.email || parsedData.user.email;
   console.log('current users id', CurrentUserId);
   console.log('avatar url ', profilePictureSrc);
   console.log('name is ', name);
@@ -88,7 +99,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
     setSelectedUser(user);
     setSelectedUserIndex(index);
     // Create a chat room ID
-    const ids = [CurrentUserId, user.user_metadata.email].sort();
+    const ids = [CurrentUserId, user.user_metadata.email || user.email].sort();
     console.log('ids', ids);
     const chatRoomIdd = `${ids[0]}-${ids[1]}`;
     // const chatRoomIdd = `${CurrentUserId}-${user.id}`;
@@ -105,11 +116,20 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   return (
     <div className="h-[678px] w-[350px] rounded-xl border-[1px] border-solid border-darkslategray bg-white">
       <div className="flex flex-row pl-[30px] pt-[10px]">
-        <img
-          className="h-[50px] w-[50px] rounded-[50%] object-cover"
-          alt=""
-          src={profilePictureSrc}
-        />
+        {profilePictureSrc ? (
+          <img
+            className="h-[50px] w-[50px] rounded-[50%] object-cover"
+            alt=""
+            src={profilePictureSrc}
+          />
+        ) : (
+          <Avatarr
+            name={parsedData.user.email.split('@')[0]}
+            size="60"
+            round={true}
+          />
+        )}
+
         <div className="pl-[10px]">
           <b className="   w-[180px] text-left text-[18px]">
             <p>{truncatedName}</p>
@@ -154,16 +174,15 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
                 }`}
               >
                 {/* Message box */}
-
                 <Messagebox
                   avatarSrc={user.user_metadata.avatar_url || ''}
                   userName={
                     user.user_metadata.full_name &&
                     user.user_metadata.full_name.length > 15
                       ? `${user.user_metadata.full_name.slice(0, 15)}...`
-                      : user.user_metadata.full_name || ''
+                      : user.user_metadata.full_name || user.email.split('@')[0]
                   }
-                  messageText={user.user_metadata.email || ''}
+                  messageText={user.user_metadata.email || user.email}
                 />
                 {onlineUsers.includes(user.user_metadata.email || '') && (
                   <div

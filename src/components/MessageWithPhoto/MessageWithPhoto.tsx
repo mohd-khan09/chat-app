@@ -1,15 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   MessageListStore,
   UserDataStore,
+  useChatRoomIdStore,
   useSocketStore,
   useTypingStore,
 } from '../../store';
 import { Message } from '../../store';
+import Avatar from 'react-avatar';
+import supabase from '../SupabaseCleint/supabaseclient';
+
 const MessageWithPhoto = () => {
   const { messageList, setMessageToList, resetMessageList } =
     MessageListStore();
   const { selectedUser } = UserDataStore();
+  const { chatRoomId } = useChatRoomIdStore();
   const { setTypingStatus } = useTypingStore();
   // const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -54,7 +59,8 @@ const MessageWithPhoto = () => {
   const parsedData = JSON.parse(
     localStorage.getItem('sb-bqeerxqeupnwlcywxfml-auth-token') || ''
   );
-  const CurrentUserEmail = parsedData.user.user_metadata.email;
+  const CurrentUserEmail =
+    parsedData.user.user_metadata.email || parsedData.user.email;
   const CurrentUserPhoto = parsedData.user.user_metadata.avatar_url;
 
   useEffect(() => {
@@ -80,11 +86,20 @@ const MessageWithPhoto = () => {
                 </p>
               </div>
               <div className="flex-shrink-0 pr-[20px] ">
-                <img
-                  className="h-[60px] w-[60px]   rounded-[50%] object-cover"
-                  alt=""
-                  src={CurrentUserPhoto}
-                />
+                {CurrentUserPhoto ? (
+                  <img
+                    className="h-[60px] w-[60px]   rounded-[50%] object-cover"
+                    alt=""
+                    src={CurrentUserPhoto}
+                  />
+                ) : (
+                  <Avatar
+                    name={CurrentUserEmail.split('@')[0]}
+                    size="60"
+                    round={true}
+                  />
+                )}
+
                 <div className="pt-[6px]">
                   <p className="rounded-md bg-dimgreen ">{message.time}</p>
                 </div>
@@ -93,11 +108,20 @@ const MessageWithPhoto = () => {
           ) : (
             <>
               <div className="flex-shrink-0 pl-[20px]">
-                <img
-                  className="h-[60px] w-[60px] rounded-[50%] object-cover"
-                  alt=""
-                  src={selectedUser?.user_metadata.avatar_url}
-                />
+                {selectedUser?.user_metadata.avatar_url ? (
+                  <img
+                    className="h-[60px] w-[60px] rounded-[50%] object-cover"
+                    alt=""
+                    src={selectedUser?.user_metadata.avatar_url}
+                  />
+                ) : (
+                  <Avatar
+                    name={parsedData.user.email.split('@')[0]}
+                    size="60"
+                    round={true}
+                  />
+                )}
+
                 <div className="pt-[6px]">
                   <p className="rounded-md bg-dimgreen ">{message.time}</p>
                 </div>

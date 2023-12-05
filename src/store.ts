@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Socket } from 'socket.io-client';
 export interface User {
   id: string;
-
+  email: string;
   user_metadata: {
     avatar_url?: string;
     email?: string;

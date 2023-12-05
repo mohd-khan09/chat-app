@@ -8,6 +8,7 @@ import {
 } from '../../store';
 import AttachIcon from '../SVGs/Attach';
 import { useRef, useState } from 'react';
+import supabase from '../SupabaseCleint/supabaseclient';
 // import EmojiPicker from 'emoji-picker-react';
 
 export function InputWithButton(props: TextInputProps) {
@@ -37,7 +38,7 @@ export function InputWithButton(props: TextInputProps) {
     }
     const typingData = {
       room: chatRoomId,
-      Author: parsedData.user.user_metadata.email,
+      Author: parsedData.user.user_metadata.email || parsedData.user.email,
     };
 
     if (!isTyping) {
@@ -54,13 +55,17 @@ export function InputWithButton(props: TextInputProps) {
       socket?.emit('stopped_typing', typingData);
       setIsTyping(false);
       console.log('stopped_typing emitted', typingData);
-    }, 2000);
+    }, 1000);
   };
+
+  // const addDataToSupabase = async () => {
+  //   const { error } = await supabase;
+  // };
   const sendMessage = async () => {
     if (message !== '' && message !== null) {
       const messageData = {
         room: chatRoomId,
-        Author: parsedData.user.user_metadata.email,
+        Author: parsedData.user.user_metadata.email || parsedData.user.email,
         message: message,
         time:
           new Date(Date.now()).getHours() +
@@ -70,6 +75,22 @@ export function InputWithButton(props: TextInputProps) {
       socket?.emit('send_message', messageData);
       setMessageToList(messageData);
       setMessage('');
+
+      const { data, error } = await supabase.from('messages').insert([
+        {
+          content: message,
+          sender: parsedData.user.user_metadata.email || parsedData.user.email,
+          receiver: chatRoomId.split('-')[1],
+          roomid: chatRoomId,
+          timestamp: new Date(),
+        },
+      ]);
+      if (error) {
+        console.error('Error inserting data: ', error);
+        return;
+      } else {
+        console.log('data inserted succesfully to table messages', data);
+      }
     }
   };
 

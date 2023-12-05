@@ -2,6 +2,7 @@ import { Button } from '@mantine/core';
 import DotMenu from '../DotMenu/Menu';
 import CallIcon from '../SVGs/CallIcon';
 import VideoCallIcon from '../SVGs/VideoCallIcon';
+import Avatar from 'react-avatar';
 import { OnlineUsersStore, UserDataStore, useTypingStore } from '../../store';
 // import { useSocketStore } from '../../store';
 // import { useEffect, useState } from 'react';
@@ -17,16 +18,25 @@ const ChatNavBar = () => {
   return (
     <div className=" flex h-[80px] w-full flex-shrink-[0] rounded-[10px] bg-darkgreen ">
       <div className="flex items-center pl-[30px]">
-        <img
-          className=" h-[60px] w-[90px] items-center rounded-[50%] object-cover"
-          alt=""
-          src={selectedUser ? selectedUser.user_metadata.avatar_url : ''}
-        />
+        {selectedUser?.user_metadata.avatar_url ? (
+          <img
+            className=" h-[60px] w-[90px] items-center rounded-[50%] object-cover"
+            alt=""
+            src={selectedUser ? selectedUser.user_metadata.avatar_url : ''}
+          />
+        ) : (
+          <Avatar
+            name={selectedUser?.email.split('@')[0]}
+            size="60"
+            round={true}
+          />
+        )}
       </div>
       <div className="flex w-full flex-col justify-center">
         <h1 className=" pl-[35px]  text-left text-[27px] font-medium  text-white">
           {selectedUser
-            ? selectedUser.user_metadata.full_name
+            ? selectedUser.user_metadata.full_name ||
+              selectedUser.email.split('@')[0]
             : 'No user selected'}
         </h1>
         {isTyping ? (
