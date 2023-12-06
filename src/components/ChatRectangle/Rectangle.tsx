@@ -184,7 +184,9 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
                   }
                   messageText={user.user_metadata.email || user.email}
                 />
-                {onlineUsers.includes(user.user_metadata.email || '') && (
+                {onlineUsers.includes(
+                  user.user_metadata.email || user.email
+                ) && (
                   <div
                     style={{
                       width: '10px',

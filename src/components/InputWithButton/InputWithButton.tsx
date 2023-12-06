@@ -65,8 +65,11 @@ export function InputWithButton(props: TextInputProps) {
     if (message !== '' && message !== null) {
       const messageData = {
         room: chatRoomId,
-        Author: parsedData.user.user_metadata.email || parsedData.user.email,
+        receiver: chatRoomId.split('-')[1],
+        sender: parsedData.user.user_metadata.email || parsedData.user.email,
         message: message,
+        content: message,
+        Author: parsedData.user.user_metadata.email || parsedData.user.email,
         time:
           new Date(Date.now()).getHours() +
           ':' +

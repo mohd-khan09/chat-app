@@ -46,6 +46,9 @@ interface TypingStore {
   setTypingStatus: (isTyping: boolean) => void; // Setter function
 }
 export interface Message {
+  receiver: string;
+  content: string;
+  sender: string;
   room: string;
   Author: string;
   message: string;
