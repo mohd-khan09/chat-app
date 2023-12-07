@@ -13,7 +13,7 @@ import {
 import { IconArrowLeft } from '@tabler/icons-react';
 import classes from './ForgotPassword.module.css';
 import supabase from '../../components/SupabaseCleint/supabaseclient';
-import UseErrorStore from '../../store';
+import { UseErrorStore } from '../../store';
 import { useForm } from '@mantine/form';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -128,7 +128,7 @@ const ForgotPassword = () => {
             </Anchor>
             <Button
               type="submit"
-              className="text-black bg-custom-teal rounded-xl focus:outline-none"
+              className="rounded-xl bg-custom-teal text-black focus:outline-none"
             >
               Reset password
               {Loading && (

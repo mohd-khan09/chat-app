@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import supabase from '../SupabaseCleint/supabaseclient';
 import { useForm } from '@mantine/form';
-import UseErrorStore from '../../store';
+import { UseErrorStore } from '../../store';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
@@ -107,10 +107,10 @@ const ResetPassword = () => {
               form.setFieldValue('confirmPassword', event.currentTarget.value)
             }
           />
-          <div className="pt-4 width-[20px]">
+          <div className="width-[20px] pt-4">
             <Button
               type="submit"
-              className="text-black bg-custom-teal rounded-xl focus:outline-none  "
+              className="rounded-xl bg-custom-teal text-black focus:outline-none  "
             >
               Reset password
               {Loading && (

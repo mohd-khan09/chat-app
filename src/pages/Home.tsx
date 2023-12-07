@@ -1,18 +1,23 @@
-import supabase from '../components/SupabaseCleint/supabaseclient';
+import ChatNavBar from '../components/ChatNavBar/ChatNavBar';
+import Rectangle from '../components/ChatRectangle/Rectangle';
+import { InputWithButton } from '../components/InputWithButton/InputWithButton';
+import MessageArea from '../components/MessagingArea/MessageArea';
 
 const Home = () => {
-  const HandleClick = async () => {
-    const { error } = await supabase.auth.signOut();
-    console.log('signoutcalled');
-    if (error) {
-      console.log(error);
-    }
-  };
   return (
-    <div>
-      <h1>home page </h1>
-
-      <button onClick={HandleClick}>logout</button>
+    <div className="flex   w-full ">
+      <div className="h-full ">
+        <Rectangle
+          name="John Doe"
+          nickName="@john_doe123"
+          profilePictureSrc="path_to_image.jpg"
+        />
+      </div>
+      <div className="h-full w-full  pl-[20px] ">
+        <ChatNavBar />
+        <MessageArea />
+        <InputWithButton />
+      </div>
     </div>
   );
 };
