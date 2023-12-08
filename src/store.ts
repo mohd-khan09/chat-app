@@ -46,6 +46,7 @@ interface TypingStore {
   setTypingStatus: (isTyping: boolean) => void; // Setter function
 }
 export interface Message {
+  timestamp: string;
   receiver: string;
   content: string;
   sender: string;
@@ -71,6 +72,22 @@ interface OnlineUserStore {
   onlineUsers: string[];
   setOnlineUsers: (users: string[]) => void;
 }
+
+interface RoomUsersState {
+  usersInRoom: { [key: string]: string[] };
+  setUsersInRoom: (roomId: string, users: string[]) => void;
+}
+
+export const useRoomUsersStore = create<RoomUsersState>((set) => ({
+  usersInRoom: {},
+  setUsersInRoom: (roomId, users) =>
+    set((state) => ({
+      usersInRoom: {
+        ...state.usersInRoom,
+        [roomId]: users,
+      },
+    })),
+}));
 
 export const OnlineUsersStore = create<OnlineUserStore>((set) => ({
   onlineUsers: [],
@@ -122,3 +139,19 @@ export const useTypingStore = create<TypingStore>((set) => ({
   isTyping: false,
   setTypingStatus: (isTyping) => set({ isTyping }),
 }));
+
+type UnreadMessagesCount =
+  | Record<string, number>
+  | ((prevState: Record<string, number>) => Record<string, number>);
+
+interface UnreadMessagesCountStore {
+  unreadMessagesCount: UnreadMessagesCount;
+  setUnreadMessages: (count: UnreadMessagesCount) => void;
+}
+
+export const useUnreadMessagesCountStore = create<UnreadMessagesCountStore>(
+  (set) => ({
+    unreadMessagesCount: {},
+    setUnreadMessages: (count) => set({ unreadMessagesCount: count }),
+  })
+);

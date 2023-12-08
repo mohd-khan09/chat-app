@@ -89,7 +89,7 @@ const MessageWithPhoto = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messageList]);
   // console.log('istypoing', isTyping);
-
+  console.log('messageList', messageList);
   return (
     <>
       <div ref={containerRef}>
@@ -125,7 +125,15 @@ const MessageWithPhoto = () => {
                   )}
 
                   <div className="pt-[6px]">
-                    <p className="rounded-md bg-dimgreen ">{message.time}</p>
+                    <p className="rounded-md bg-dimgreen ">
+                      {message.time ||
+                        (new Date(message.timestamp).getHours() % 12 || 12) +
+                          ':' +
+                          new Date(message.timestamp).getMinutes() +
+                          (new Date(message.timestamp).getHours() < 12
+                            ? ' AM'
+                            : ' PM')}
+                    </p>
                   </div>
                 </div>
               </>
@@ -147,7 +155,15 @@ const MessageWithPhoto = () => {
                   )}
 
                   <div className="pt-[6px]">
-                    <p className="rounded-md bg-dimgreen ">{message.time}</p>
+                    <p className="rounded-md bg-dimgreen ">
+                      {message.time ||
+                        (new Date(message.timestamp).getHours() % 12 || 12) +
+                          ':' +
+                          new Date(message.timestamp).getMinutes() +
+                          (new Date(message.timestamp).getHours() < 12
+                            ? ' AM'
+                            : ' PM')}
+                    </p>
                   </div>
                 </div>
                 <div className="ml-[15px] mt-[25px] ">

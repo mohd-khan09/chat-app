@@ -12,6 +12,7 @@ import {
   useChatRoomIdStore,
   OnlineUsersStore,
   useSocketStore,
+  useRoomUsersStore,
 } from '../../store';
 import supabase from '../SupabaseCleint/supabaseclient';
 import io from 'socket.io-client';
@@ -20,14 +21,25 @@ interface RectangleBoxProps {
   nickName: string;
   profilePictureSrc: string;
 }
-
+// type UnreadMessagesCount = Record<string, number>;
 const Rectangle: React.FC<RectangleBoxProps> = () => {
   // const [hoveredMessageIndex, setHoveredMessageIndex] = useState(-1);
+  // const [unreadMessages, setUnreadMessages] = useState(0);
   const [selectedUserIndex, setSelectedUserIndex] = useState(-1);
   const { userss, setUserss } = ListOfAllUersStore();
   const { socket, setSocket } = useSocketStore();
   const { chatRoomId, setChatRoomId } = useChatRoomIdStore();
   const { onlineUsers, setOnlineUsers } = OnlineUsersStore();
+  const { selectedUser, setSelectedUser } = UserDataStore();
+  const { usersInRoom, setUsersInRoom } = useRoomUsersStore();
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState<{ sender: string }[]>(
+    []
+  );
+  // const [unreadMessagesCount, setUnreadMessagesCount] =
+  //   useState<UnreadMessagesCount>({});
+  // const {unreadMessages, setUnreadMessagesCount } = useUnreadMessagesCountStore();
+
   const parsedData = JSON.parse(
     localStorage.getItem('sb-bqeerxqeupnwlcywxfml-auth-token') || ''
   );
@@ -44,7 +56,90 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
       socketIo.disconnect();
     };
   }, [CurrentUserEmail, setSocket]);
+  interface MessageData {
+    sender: string;
+    receiver: string;
+    // include other properties of messageData here
+  }
+  //////////////////
 
+  useEffect(() => {
+    const fetchUnreadMessagesFromSupabase = async () => {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('read', false)
+        .eq('receiver', CurrentUserEmail);
+
+      if (error) {
+        console.error('Error fetching unread messages:', error);
+        return;
+      }
+      console.log('fetchUnreadMessagesFromSupabase', data);
+      setUnreadMessages(data);
+      setHasUnreadMessages(data.length > 0);
+      return data.length;
+    };
+
+    socket?.on('recive_message_all', (messageData: MessageData) => {
+      console.log('Received message data:', messageData);
+      // Check if the message was sent to you
+      if (messageData.receiver === CurrentUserEmail) {
+        console.log(
+          'Message was sent to current user, fetching unread messages...'
+        );
+        // setUnreadMessagesCount((prevCount) => ({
+        //   ...prevCount,
+        //   [messageData.sender]: (prevCount[messageData.sender] || 0) + 1,
+        // }));
+        setTimeout(fetchUnreadMessagesFromSupabase, 1000);
+      }
+    });
+
+    return () => {
+      socket?.off('recive_message');
+    };
+  }, [CurrentUserEmail, socket]);
+  /////////////
+  useEffect(() => {
+    const fetchUnreadMessagesFromSupabase = async () => {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('read', false)
+        .eq('receiver', CurrentUserEmail);
+
+      if (error) {
+        console.error('Error fetching unread messages:', error);
+        return;
+      }
+      console.log('fetchUnreadMessagesFromSupabase', data);
+      setHasUnreadMessages(data.length > 0);
+      setUnreadMessages(data);
+      return data.length;
+    };
+
+    fetchUnreadMessagesFromSupabase();
+  }, [CurrentUserEmail]);
+
+  const markMessagesAsRead = async (
+    currentUserEmail: string,
+    senderEmail: string
+  ) => {
+    const { data, error } = await supabase
+      .from('messages')
+      .update({ read: true })
+      .eq('receiver', currentUserEmail)
+      .eq('sender', senderEmail);
+
+    if (error) {
+      console.error('Error updating messages:', error);
+      return;
+    }
+
+    console.log('Updated messages:', data);
+  };
+  ////////////////
   const socketRef = useRef(socket);
   useEffect(() => {
     socketRef.current = socket;
@@ -75,6 +170,8 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
       setOnlineUsers(onlineUsers);
     });
   }, [setOnlineUsers, socket]);
+  //users in th room
+  console.log('users in the room', usersInRoom);
 
   const name =
     parsedData.user.user_metadata.full_name ||
@@ -93,11 +190,25 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   console.log('list of users from zustand state', userss);
   console.log('list of online users  ', onlineUsers);
 
-  const { setSelectedUser } = UserDataStore();
   // const { message } = useMessageStore();
-  const handleUserClick = (user: User, index: number) => {
+  const handleUserClick = async (user: User, index: number) => {
+    if (chatRoomId) {
+      socket?.emit('leave_room', chatRoomId);
+    }
     setSelectedUser(user);
     setSelectedUserIndex(index);
+    const handleUsersInRoom = ({
+      roomId,
+      usernames,
+    }: {
+      roomId: string;
+      usernames: string[];
+    }) => {
+      // Update the state with the list of users in the room
+      setUsersInRoom(roomId, usernames);
+      console.log('Updated users in room:', roomId, usernames);
+    };
+
     // Create a chat room ID
     const ids = [CurrentUserId, user.user_metadata.email || user.email].sort();
     console.log('ids', ids);
@@ -111,8 +222,32 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
 
     // socket && socket.emit('chat message', { chatRoomId, message: 'hello' });
     socket?.emit('join_room', chatRoomIdd);
-  };
+    socket?.on('users_in_room', handleUsersInRoom);
+    setSelectedUser(user);
+    await markMessagesAsRead(CurrentUserEmail, user.email);
+    const fetchUnreadMessagesFromSupabase = async () => {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('read', false)
+        .eq('receiver', CurrentUserEmail);
 
+      if (error) {
+        console.error('Error fetching unread messages:', error);
+        return;
+      }
+      console.log('fetchUnreadMessagesFromSupabase', data);
+      setUnreadMessages(data);
+      setHasUnreadMessages(data.length > 0);
+      return data.length;
+    };
+
+    setTimeout(fetchUnreadMessagesFromSupabase, 1000);
+    console.log('unreadMessages', unreadMessages);
+  };
+  useEffect(() => {
+    console.log('unreadMessages updated', unreadMessages);
+  }, [unreadMessages]);
   return (
     <div className="h-[678px] w-[350px] rounded-xl border-[1px] border-solid border-darkslategray bg-white">
       <div className="flex flex-row pl-[30px] pt-[10px]">
@@ -139,7 +274,12 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
           </p>
         </div>
         <div className="pt-[5px]">
-          <Indicator className="  " color="red" size={8}>
+          <Indicator
+            color="red"
+            size={10}
+            processing
+            disabled={!hasUnreadMessages}
+          >
             <Avatar className="" size="1.4rem" radius="sm" src={BellSvg} />
           </Indicator>
         </div>
@@ -163,6 +303,27 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
               // onMouseLeave={() => setHoveredMessageIndex(-1)} // Reset the hovered message index when leaving
               onClick={() => handleUserClick(user, index)}
             >
+              <div
+                style={{
+                  paddingLeft: '45px',
+                  // paddingTop: '10px',
+                  display: 'flex',
+                  justifyContent: 'left',
+                  alignItems: 'center',
+                }}
+              >
+                {unreadMessages.some(
+                  (message: { sender: string }) => message.sender === user.email
+                ) && (
+                  <Indicator
+                    color="red"
+                    offset={18}
+                    size={15}
+                    inline
+                    label="New"
+                  />
+                )}
+              </div>
               {/* Dark green line */}
               {selectedUserIndex === index && (
                 <div className="absolute left-0 h-full w-[5px] bg-darkgreen transition-colors duration-200"></div>
@@ -184,6 +345,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
                   }
                   messageText={user.user_metadata.email || user.email}
                 />
+
                 {onlineUsers.includes(
                   user.user_metadata.email || user.email
                 ) && (

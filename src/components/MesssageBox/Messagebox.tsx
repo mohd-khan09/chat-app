@@ -1,16 +1,21 @@
 import React from 'react';
 import Avatar from 'react-avatar';
+
 // import avatar from '../SVGs/avatar.svg';
+
 interface MessageboxProps {
   avatarSrc: string;
   userName: string;
   messageText: string;
 }
+
 const Messagebox: React.FC<MessageboxProps> = ({
   avatarSrc,
   userName,
   messageText,
 }) => {
+  // const { unreadMessagesCount } = useUnreadMessagesCountStore();
+  // console.log('unreadMessagesCount', unreadMessagesCount);
   return (
     <div className="  h-[94.8px] w-[330px]  rounded-b border-b  border-gray-300  text-[34px] font-medium text-black ">
       <div className=" flex  pl-[15px] pt-[17.3px]">

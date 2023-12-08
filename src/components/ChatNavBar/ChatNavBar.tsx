@@ -12,7 +12,7 @@ const ChatNavBar = () => {
   const { isTyping } = useTypingStore();
   const { onlineUsers } = OnlineUsersStore();
   const isReceiverOnline = onlineUsers.includes(
-    selectedUser?.user_metadata.email || ''
+    selectedUser?.user_metadata.email || selectedUser?.email || ''
   );
 
   return (
