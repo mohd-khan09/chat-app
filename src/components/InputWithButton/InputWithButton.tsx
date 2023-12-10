@@ -26,7 +26,11 @@ export function InputWithButton(props: TextInputProps) {
   const parsedData = JSON.parse(
     localStorage.getItem('sb-bqeerxqeupnwlcywxfml-auth-token') || ''
   );
-
+  const currentTime = new Date(Date.now());
+  let hours = currentTime.getHours();
+  const minutes = currentTime.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
   useEffect(() => {
     const handleUsersInRoom = ({
       roomId,
@@ -94,10 +98,7 @@ export function InputWithButton(props: TextInputProps) {
         message: message,
         content: message,
         Author: parsedData.user.user_metadata.email || parsedData.user.email,
-        time:
-          new Date(Date.now()).getHours() +
-          ':' +
-          new Date(Date.now()).getMinutes(),
+        time: hours + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + ampm,
         timestamp: new Date().toISOString(),
       };
       socket?.emit('send_message', messageData);
