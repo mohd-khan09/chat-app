@@ -30,7 +30,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   const { socket, setSocket } = useSocketStore();
   const { chatRoomId, setChatRoomId } = useChatRoomIdStore();
   const { onlineUsers, setOnlineUsers } = OnlineUsersStore();
-  const { selectedUser, setSelectedUser } = UserDataStore();
+  const { setSelectedUser } = UserDataStore();
   const { usersInRoom, setUsersInRoom } = useRoomUsersStore();
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState<{ sender: string }[]>(
@@ -275,9 +275,9 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
         </div>
         <div className="pt-[5px]">
           <Indicator
+            processing
             color="red"
             size={10}
-            processing
             disabled={!hasUnreadMessages}
           >
             <Avatar className="" size="1.4rem" radius="sm" src={BellSvg} />
