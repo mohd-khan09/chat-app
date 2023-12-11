@@ -39,7 +39,7 @@ const MessageWithPhoto = () => {
       if (error) {
         console.error('Error fetching messages: ', error);
       } else if (data) {
-        console.log('messages frtched from db', data);
+        // console.log('messages frtched from db', data);
         data.forEach((message: Message) => {
           setMessageToList(message);
         });
@@ -50,22 +50,22 @@ const MessageWithPhoto = () => {
 
   useEffect(() => {
     const messageListener = (data: Message) => {
-      console.log('data from message area', data);
+      // console.log('data from message area', data);
       setMessageToList(data);
     };
 
     socket?.on('recive_message', messageListener);
 
-    socket?.on('userTyping', (typingData) => {
-      console.log(typingData.Author + ' is typing...');
+    socket?.on('userTyping', () => {
+      // console.log(typingData.Author + ' is typing...');
       // setIsTyping(true);
       setTypingStatus(true);
       // Here you can set state or call a function to update your UI
     });
 
     // Listen for 'stopped_typing' event
-    socket?.on('userStoppedTyping', (typingData) => {
-      console.log(typingData.Author + ' stopped typing...');
+    socket?.on('userStoppedTyping', () => {
+      // console.log(typingData.Author + ' stopped typing...');
       // setIsTyping(false);
       setTypingStatus(false);
       // Here you can set state or call a function to update your UI
@@ -89,7 +89,7 @@ const MessageWithPhoto = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messageList]);
   // console.log('istypoing', isTyping);
-  console.log('messageList', messageList);
+  //console.log('messageList', messageList);
   return (
     <>
       <div ref={containerRef}>

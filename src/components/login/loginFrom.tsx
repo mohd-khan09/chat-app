@@ -22,11 +22,12 @@ import { useNavigate } from 'react-router-dom';
 import { UseErrorStore } from '../../store';
 import Spinner from '../SVGs/spinner';
 import { useSnackbar } from 'notistack';
-
+import Lottie from 'react-lottie-player';
+import LoginAmination from '../loaders/login.json';
 export function AuthenticationForm(props: PaperProps) {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { StoreError, SetStoreError } = UseErrorStore();
+  const { SetStoreError } = UseErrorStore();
   const [Loading, SetLoading] = useState(false);
   const [type, toggle] = useToggle(['login', 'register']);
   // wherever you call toggle, reset the form
@@ -56,7 +57,7 @@ export function AuthenticationForm(props: PaperProps) {
   const { email, password } = form.values;
   const signInUser = async () => {
     const valid = form.validate();
-    console.log(valid);
+    // console.log(valid);
     if (valid.hasErrors) {
       console.error('Form validation failed');
       return;
@@ -74,18 +75,18 @@ export function AuthenticationForm(props: PaperProps) {
         variant: 'error',
         autoHideDuration: 3000,
       });
-      console.log(StoreError);
+      //   console.log(StoreError);
       SetLoading(false);
       return;
     }
-    console.log('User data:from login', data);
+    // console.log('User data:from login', data);
     navigate('/home');
     SetLoading(false);
   };
 
   const SignUpUser = async () => {
     SetLoading(true);
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: email,
       password: password,
       options: {
@@ -100,11 +101,11 @@ export function AuthenticationForm(props: PaperProps) {
         variant: 'error',
         autoHideDuration: 3000,
       });
-      console.log(StoreError);
+      //  console.log(StoreError);
       SetLoading(false);
       return;
     }
-    console.log('User data:from register', data);
+    //   console.log('User data:from register', data);
     SetLoading(false);
     enqueueSnackbar({
       message: 'email sent succesfully for confirmation',
@@ -136,14 +137,14 @@ export function AuthenticationForm(props: PaperProps) {
         variant: 'error',
         autoHideDuration: 3000,
       });
-      console.log(StoreError);
+      // console.log(StoreError);
       return;
     } else {
-      console.log('User data:from register', data);
+      // console.log('User data:from register', data);
     }
   };
   const SocialLoginGithub = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
         redirectTo: 'http://localhost:5173/home',
@@ -157,10 +158,10 @@ export function AuthenticationForm(props: PaperProps) {
         variant: 'error',
         autoHideDuration: 3000,
       });
-      console.log(StoreError);
+      //  console.log(StoreError);
       return;
     } else {
-      console.log('User data:from register', data);
+      //   console.log('User data:from register', data);
     }
   };
   const handleSocialLoginGoogle = () => {
@@ -171,133 +172,140 @@ export function AuthenticationForm(props: PaperProps) {
   };
 
   return (
-    <>
-      <Paper
-        className="w-[440px]"
-        shadow="md"
-        radius="md"
-        p="xl"
-        withBorder
-        {...props}
-      >
-        <Text size="lg" fw={500}>
-          Welcome to Mantine, {type} with
-        </Text>
+    <div className="flex h-full justify-center  bg-slate-400">
+      {/* <Lottie
+        loop
+        animationData={LoginAmination}
+        style={{ width: '100%', height: 'auto' }}
+      /> */}
+      <div className="flex items-center justify-center">
+        <Paper
+          className=" h-4/6 w-[440px] "
+          shadow="md"
+          radius="md"
+          p="xl"
+          withBorder
+          {...props}
+        >
+          <Text size="lg" fw={500}>
+            Welcome to Mantine, {type} with
+          </Text>
 
-        <Group grow mb="md" mt="md">
-          <GoogleButton onClick={handleSocialLoginGoogle} radius="xl">
-            Google
-          </GoogleButton>
-          <GithubButton onClick={handleSocialLoginGithub} radius="xl">
-            Twitter
-          </GithubButton>
-        </Group>
-
-        <Divider
-          label="Or continue with email"
-          labelPosition="center"
-          my="lg"
-        />
-
-        <form onSubmit={handleSubmit}>
-          <Stack>
-            {type === 'register' && (
-              <TextInput
-                label="name"
-                placeholder="Your name"
-                value={form.values.name}
-                onChange={(event) =>
-                  form.setFieldValue('name', event.currentTarget.value)
-                }
-                radius="md"
-              />
-            )}
-            <div className="text-left ">
-              <div className="p-2">
-                <TextInput
-                  required
-                  label="email"
-                  placeholder="enter your email adress"
-                  {...form.getInputProps('email')}
-                  onChange={(event) =>
-                    form.setFieldValue('email', event.currentTarget.value)
-                  }
-                  radius="md"
-                />
-              </div>
-              <div className="p-2">
-                <TextInput
-                  required
-                  label="Password"
-                  placeholder="Your password"
-                  {...form.getInputProps('password')}
-                  onChange={(event) =>
-                    form.setFieldValue('password', event.currentTarget.value)
-                  }
-                  error={
-                    form.errors.password &&
-                    'Password should include at least 6 characters'
-                  }
-                  radius="md"
-                />
-                <div className="mt-2 pl-2">
-                  {type === 'login' && (
-                    <Anchor
-                      component="button"
-                      type="button"
-                      c="dimmed"
-                      className="  
-                  focus:outline-none"
-                      size="xs"
-                      onClick={() => navigate('/forgot-password')}
-                    >
-                      forgot password ??
-                    </Anchor>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {type === 'register' && (
-              <Checkbox
-                label="I accept terms and conditions"
-                checked={form.values.terms}
-                onChange={(event) =>
-                  form.setFieldValue('terms', event.currentTarget.checked)
-                }
-              />
-            )}
-          </Stack>
-
-          <Group justify="space-between" mt="xl">
-            <Anchor
-              component="button"
-              type="button"
-              c="dimmed"
-              onClick={handleToggle}
-              size="xs"
-              className="  
-                  focus:outline-none"
-            >
-              {type === 'register'
-                ? 'Already have an account? Login'
-                : "Don't have an account? Register"}
-            </Anchor>
-            <Button
-              type="submit"
-              className="bg-custom-teal text-black focus:outline-none"
-              radius="xl"
-            >
-              {upperFirst(type)}
-              {Loading && (
-                <div className="ml-2 ">
-                  <Spinner />
-                </div>
-              )}
-            </Button>
+          <Group grow mb="md" mt="md">
+            <GoogleButton onClick={handleSocialLoginGoogle} radius="xl">
+              Google
+            </GoogleButton>
+            <GithubButton onClick={handleSocialLoginGithub} radius="xl">
+              Twitter
+            </GithubButton>
           </Group>
-        </form>
-      </Paper>
-    </>
+
+          <Divider
+            label="Or continue with email"
+            labelPosition="center"
+            my="lg"
+          />
+
+          <form onSubmit={handleSubmit}>
+            <Stack>
+              {type === 'register' && (
+                <TextInput
+                  label="name"
+                  placeholder="Your name"
+                  value={form.values.name}
+                  onChange={(event) =>
+                    form.setFieldValue('name', event.currentTarget.value)
+                  }
+                  radius="md"
+                />
+              )}
+              <div className="text-left ">
+                <div className="p-2">
+                  <TextInput
+                    required
+                    label="email"
+                    placeholder="enter your email adress"
+                    {...form.getInputProps('email')}
+                    onChange={(event) =>
+                      form.setFieldValue('email', event.currentTarget.value)
+                    }
+                    radius="md"
+                  />
+                </div>
+                <div className="p-2">
+                  <TextInput
+                    required
+                    label="Password"
+                    placeholder="Your password"
+                    {...form.getInputProps('password')}
+                    onChange={(event) =>
+                      form.setFieldValue('password', event.currentTarget.value)
+                    }
+                    error={
+                      form.errors.password &&
+                      'Password should include at least 6 characters'
+                    }
+                    radius="md"
+                  />
+                  <div className="mt-2 pl-2">
+                    {type === 'login' && (
+                      <Anchor
+                        component="button"
+                        type="button"
+                        c="dimmed"
+                        className="  
+                  focus:outline-none"
+                        size="xs"
+                        onClick={() => navigate('/forgot-password')}
+                      >
+                        forgot password ??
+                      </Anchor>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {type === 'register' && (
+                <Checkbox
+                  label="I accept terms and conditions"
+                  checked={form.values.terms}
+                  onChange={(event) =>
+                    form.setFieldValue('terms', event.currentTarget.checked)
+                  }
+                />
+              )}
+            </Stack>
+
+            <Group justify="space-between" mt="xl">
+              <Anchor
+                component="button"
+                type="button"
+                c="dimmed"
+                onClick={handleToggle}
+                size="xs"
+                className="  
+                  focus:outline-none"
+              >
+                {type === 'register'
+                  ? 'Already have an account? Login'
+                  : "Don't have an account? Register"}
+              </Anchor>
+              <Button
+                type="submit"
+                className="bg-custom-teal text-black focus:outline-none"
+                radius="xl"
+              >
+                {upperFirst(type)}
+                {Loading && (
+                  <div className="ml-2 ">
+                    <Spinner />
+                  </div>
+                )}
+              </Button>
+            </Group>
+          </form>
+        </Paper>
+      </div>
+    </div>
   );
 }

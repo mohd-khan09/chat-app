@@ -20,22 +20,22 @@ function App() {
 
   useEffect(() => {
     const checkSession = async () => {
-      console.log('Checking session...');
+      // console.log('Checking session...');
       try {
         // Get the session from Supabase
         const session = await supabase.auth.getSession();
         if (session.data.session) {
-          console.log('User is logged in');
+          // console.log('User is logged in');
           setIsLoggedIn(true);
         } else {
-          console.log('User is not logged in');
+          // console.log('User is not logged in');
           setIsLoggedIn(false);
         }
       } catch (error) {
         console.error('Error fetching session:', error);
         setIsLoggedIn(false);
       }
-      console.log('Done checking session');
+      // console.log('Done checking session');
     };
 
     checkSession();

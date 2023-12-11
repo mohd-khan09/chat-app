@@ -31,7 +31,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   const { chatRoomId, setChatRoomId } = useChatRoomIdStore();
   const { onlineUsers, setOnlineUsers } = OnlineUsersStore();
   const { setSelectedUser } = UserDataStore();
-  const { usersInRoom, setUsersInRoom } = useRoomUsersStore();
+  const { setUsersInRoom } = useRoomUsersStore();
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState<{ sender: string }[]>(
     []
@@ -48,7 +48,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   useEffect(() => {
     const socketIo = io('http://localhost:3001');
     socketIo.emit('user_online', { username: CurrentUserEmail });
-    console.log('user name enmitted to backend');
+    // console.log('user name enmitted to backend');
     setSocket(socketIo);
 
     // Disconnect the socket when the component unmounts
@@ -75,19 +75,19 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
         console.error('Error fetching unread messages:', error);
         return;
       }
-      console.log('fetchUnreadMessagesFromSupabase', data);
+      // console.log('fetchUnreadMessagesFromSupabase', data);
       setUnreadMessages(data);
       setHasUnreadMessages(data.length > 0);
       return data.length;
     };
 
     socket?.on('recive_message_all', (messageData: MessageData) => {
-      console.log('Received message data:', messageData);
+      // console.log('Received message data:', messageData);
       // Check if the message was sent to you
       if (messageData.receiver === CurrentUserEmail) {
-        console.log(
-          'Message was sent to current user, fetching unread messages...'
-        );
+        // console.log(
+        //   'Message was sent to current user, fetching unread messages...'
+        // );
         // setUnreadMessagesCount((prevCount) => ({
         //   ...prevCount,
         //   [messageData.sender]: (prevCount[messageData.sender] || 0) + 1,
@@ -113,7 +113,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
         console.error('Error fetching unread messages:', error);
         return;
       }
-      console.log('fetchUnreadMessagesFromSupabase', data);
+      // console.log('fetchUnreadMessagesFromSupabase', data);
       setHasUnreadMessages(data.length > 0);
       setUnreadMessages(data);
       return data.length;
@@ -126,7 +126,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
     currentUserEmail: string,
     senderEmail: string
   ) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('messages')
       .update({ read: true })
       .eq('receiver', currentUserEmail)
@@ -137,7 +137,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
       return;
     }
 
-    console.log('Updated messages:', data);
+    // console.log('Updated messages:', data);
   };
   ////////////////
   const socketRef = useRef(socket);
@@ -171,7 +171,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
     });
   }, [setOnlineUsers, socket]);
   //users in th room
-  console.log('users in the room', usersInRoom);
+  // console.log('users in the room', usersInRoom);
 
   const name =
     parsedData.user.user_metadata.full_name ||
@@ -206,18 +206,18 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
     }) => {
       // Update the state with the list of users in the room
       setUsersInRoom(roomId, usernames);
-      console.log('Updated users in room:', roomId, usernames);
+      // console.log('Updated users in room:', roomId, usernames);
     };
 
     // Create a chat room ID
     const ids = [CurrentUserId, user.user_metadata.email || user.email].sort();
-    console.log('ids', ids);
+    // console.log('ids', ids);
     const chatRoomIdd = `${ids[0]}-${ids[1]}`;
     // const chatRoomIdd = `${CurrentUserId}-${user.id}`;
-    console.log('chatroom id is :', chatRoomIdd);
+    // console.log('chatroom id is :', chatRoomIdd);
     setChatRoomId(chatRoomIdd);
-    console.log('chat room id ', chatRoomIdd);
-    console.log('chat room id from zustand', chatRoomId);
+    // console.log('chat room id ', chatRoomIdd);
+    // console.log('chat room id from zustand', chatRoomId);
     // Send a message
 
     // socket && socket.emit('chat message', { chatRoomId, message: 'hello' });
@@ -236,17 +236,17 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
         console.error('Error fetching unread messages:', error);
         return;
       }
-      console.log('fetchUnreadMessagesFromSupabase', data);
+      // console.log('fetchUnreadMessagesFromSupabase', data);
       setUnreadMessages(data);
       setHasUnreadMessages(data.length > 0);
       return data.length;
     };
 
     setTimeout(fetchUnreadMessagesFromSupabase, 1000);
-    console.log('unreadMessages', unreadMessages);
+    // console.log('unreadMessages', unreadMessages);
   };
   useEffect(() => {
-    console.log('unreadMessages updated', unreadMessages);
+    // console.log('unreadMessages updated', unreadMessages);
   }, [unreadMessages]);
   return (
     <div className="h-[678px] w-[350px] rounded-xl border-[1px] border-solid border-darkslategray bg-white">

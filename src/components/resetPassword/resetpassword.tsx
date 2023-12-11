@@ -20,7 +20,7 @@ import Spinner from '../SVGs/spinner';
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { StoreError, SetStoreError } = UseErrorStore();
+  const { SetStoreError } = UseErrorStore();
   const [Loading, SetLoading] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
   const form = useForm({
@@ -39,13 +39,13 @@ const ResetPassword = () => {
     event.preventDefault();
     SetLoading(true);
     const valid = form.validate();
-    console.log(valid);
+    // console.log(valid);
     if (valid.hasErrors) {
       console.error('Form validation failed');
       SetLoading(false);
       return;
     }
-    const { data, error } = await supabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
       password: password,
     });
     if (error) {
@@ -56,11 +56,11 @@ const ResetPassword = () => {
         variant: 'error',
         autoHideDuration: 3000,
       });
-      console.log('store error:', StoreError);
+      // console.log('store error:', StoreError);
       SetLoading(false);
       return;
     }
-    console.log('user password updated', data);
+    // console.log('user password updated', data);
     enqueueSnackbar({
       message: 'Password succesfully updated ',
       variant: 'success',
