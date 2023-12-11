@@ -63,7 +63,7 @@ export function AuthenticationForm(props: PaperProps) {
       return;
     }
     SetLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
@@ -123,7 +123,7 @@ export function AuthenticationForm(props: PaperProps) {
   };
 
   const SocialLoginGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: 'http://localhost:5173/home',
