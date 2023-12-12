@@ -11,9 +11,11 @@ import { useState } from 'react';
 import ThreeDots from '../SVGs/three-dots-vertical';
 import supabase from '../SupabaseCleint/supabaseclient';
 import { useNavigate } from 'react-router-dom';
+import { useLoginStore } from '../../store';
 const DotMenu = () => {
   const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
+  const { setIsLoggedIn } = useLoginStore();
   const handleToggle = () => {
     setOpened(!opened); // Toggle the state when the button is clicked
   };
@@ -24,6 +26,7 @@ const DotMenu = () => {
     if (error) {
       // console.log(error);
     } else {
+      setIsLoggedIn(false);
       navigate('/home');
       // console.log('navigate called');
     }
