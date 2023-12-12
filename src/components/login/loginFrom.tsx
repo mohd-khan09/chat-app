@@ -89,7 +89,7 @@ export function AuthenticationForm(props: PaperProps) {
       email: email,
       password: password,
       options: {
-        emailRedirectTo: 'https//example.com/welcome',
+        emailRedirectTo: 'http://localhost:5173/home',
       },
     });
     if (error) {
@@ -106,6 +106,11 @@ export function AuthenticationForm(props: PaperProps) {
     }
     console.log('User data:from register', data);
     SetLoading(false);
+    enqueueSnackbar({
+      message: 'email sent succesfully for confirmation',
+      variant: 'success',
+      autoHideDuration: 3000,
+    });
   };
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();

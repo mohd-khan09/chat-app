@@ -18,13 +18,13 @@ import supabase from './components/SupabaseCleint/supabaseclient';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Simulated session check logic - replace it with your actual session checking mechanism
   useEffect(() => {
     const checkSession = async () => {
+      console.log('Checking session...');
       try {
         // Get the session from Supabase
         const session = await supabase.auth.getSession();
-        if (session.data.session !== null) {
+        if (session.data.session) {
           console.log('User is logged in');
           setIsLoggedIn(true);
         } else {
@@ -33,7 +33,9 @@ function App() {
         }
       } catch (error) {
         console.error('Error fetching session:', error);
+        setIsLoggedIn(false);
       }
+      console.log('Done checking session');
     };
 
     checkSession();

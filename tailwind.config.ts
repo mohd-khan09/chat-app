@@ -9,6 +9,9 @@ export default {
         darkslategray: 'rgba(74, 74, 74, 0.51)',
         dimgreen: '#E9F7F8',
         darkgreen: '#329A93',
+        greyBackground: '#EDEDED',
+
+        scrollGreen: 'rgba(233, 247, 248, 0.4)',
       },
 
       fontFamily: {
