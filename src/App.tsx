@@ -9,7 +9,7 @@ import { theme } from './theme';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './components/resetPassword/resetpassword';
 import { SnackbarProvider } from 'notistack';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import supabase from './components/SupabaseCleint/supabaseclient';
 import { useLoginStore } from './store';
 // import io from 'socket.io-client';
