@@ -175,11 +175,6 @@ export function AuthenticationForm(props: PaperProps) {
 
   return (
     <div className="flex h-full justify-center ">
-      {/* <Lottie
-        loop
-        animationData={LoginAmination}
-        style={{ width: '100%', height: 'auto' }}
-      /> */}
       <div className="flex items-center justify-center">
         <Paper
           className=" h-auto w-[440px] "
