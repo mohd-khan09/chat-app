@@ -155,3 +155,11 @@ export const useUnreadMessagesCountStore = create<UnreadMessagesCountStore>(
     setUnreadMessages: (count) => set({ unreadMessagesCount: count }),
   })
 );
+interface IStore {
+  isLoggedIn: boolean;
+  setIsLoggedIn: (value: boolean) => void;
+}
+export const useLoginStore = create<IStore>((set) => ({
+  isLoggedIn: false,
+  setIsLoggedIn: (value) => set({ isLoggedIn: value }),
+}));

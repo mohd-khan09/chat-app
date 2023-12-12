@@ -25,7 +25,7 @@ const ForgotPassword = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [Loading, SetLoading] = useState(false);
   const navigate = useNavigate();
-  const { StoreError, SetStoreError } = UseErrorStore();
+  const { SetStoreError } = UseErrorStore();
 
   const form = useForm({
     initialValues: {
@@ -43,13 +43,13 @@ const ForgotPassword = () => {
     SetLoading(true);
     event.preventDefault();
     const valid = form.validate();
-    console.log(valid);
+    // console.log(valid);
     if (valid.hasErrors) {
       console.error('Form validation failed');
       SetLoading(false);
       return;
     }
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: 'http://localhost:5173/reset-password',
     });
 
@@ -61,11 +61,11 @@ const ForgotPassword = () => {
         variant: 'error',
         autoHideDuration: 3000,
       });
-      console.log('this is store error', StoreError);
+      // console.log('this is store error', StoreError);
       SetLoading(false);
       return;
     }
-    console.log('mail sent to reset password', data);
+    // console.log('mail sent to reset password', data);
     enqueueSnackbar({
       message: 'email sent succesfully',
       variant: 'success',

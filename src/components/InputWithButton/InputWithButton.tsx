@@ -70,7 +70,7 @@ export function InputWithButton(props: TextInputProps) {
 
     if (!isTyping) {
       socket?.emit('User_typing', typingData);
-      console.log('User_typing emitted by', typingData);
+      // console.log('User_typing emitted by', typingData);
       setIsTyping(true);
     }
     // If already waiting, clear the previous timeout
@@ -81,14 +81,14 @@ export function InputWithButton(props: TextInputProps) {
     typingTimeoutRef.current = setTimeout(() => {
       socket?.emit('stopped_typing', typingData);
       setIsTyping(false);
-      console.log('stopped_typing emitted', typingData);
+      // console.log('stopped_typing emitted', typingData);
     }, 1000);
   };
 
   // const addDataToSupabase = async () => {
   //   const { error } = await supabase;
   // };
-  console.log('users in the room', usersInRoom);
+  // console.log('users in the room', usersInRoom);
   const sendMessage = async () => {
     if (message !== '' && message !== null) {
       const messageData = {
@@ -105,13 +105,13 @@ export function InputWithButton(props: TextInputProps) {
       setMessageToList(messageData);
       setMessage('');
       const receiver = selectedUser?.email || '';
-      console.log('usersInRoom:', usersInRoom);
-      console.log('chatRoomId:', chatRoomId);
-      console.log('receiver:', receiver);
-      console.log(
-        'current user email:',
-        parsedData.user.user_metadata.email || parsedData.user.email
-      );
+      // console.log('usersInRoom:', usersInRoom);
+      // console.log('chatRoomId:', chatRoomId);
+      // // console.log('receiver:', receiver);
+      // console.log(
+      //   'current user email:',
+      //   parsedData.user.user_metadata.email || parsedData.user.email
+      // );
       const readStatus =
         usersInRoom[chatRoomId]?.includes(receiver) &&
         usersInRoom[chatRoomId]?.includes(

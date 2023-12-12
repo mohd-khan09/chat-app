@@ -19,13 +19,13 @@ const DotMenu = () => {
   const HandleClick = async () => {
     const { error } = await supabase.auth.signOut();
 
-    console.log('signoutcalled');
+    // console.log('signoutcalled');
     if (error) {
-      console.log(error);
+      // console.log(error);
     } else {
       window.location.reload();
       // navigate('/home');
-      console.log('navigate called');
+      // console.log('navigate called');
     }
   };
   return (
@@ -95,7 +95,7 @@ const DotMenu = () => {
             <IconTrash style={{ width: rem(14), height: rem(14) }} />
           }
         >
-          Delete my account
+          Logout
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
