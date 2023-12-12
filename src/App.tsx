@@ -11,12 +11,13 @@ import ResetPassword from './components/resetPassword/resetpassword';
 import { SnackbarProvider } from 'notistack';
 import { useEffect, useState } from 'react';
 import supabase from './components/SupabaseCleint/supabaseclient';
+import { useLoginStore } from './store';
 // import io from 'socket.io-client';
 
 // const socket = io('http://localhost:3001');
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, setIsLoggedIn } = useLoginStore();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -39,7 +40,7 @@ function App() {
     };
 
     checkSession();
-  }, []);
+  }, [setIsLoggedIn]);
 
   return (
     <MantineProvider theme={theme}>

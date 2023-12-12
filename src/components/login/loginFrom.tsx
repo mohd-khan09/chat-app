@@ -19,17 +19,19 @@ import supabase from '../SupabaseCleint/supabaseclient';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UseErrorStore } from '../../store';
+import { UseErrorStore, useLoginStore } from '../../store';
 import Spinner from '../SVGs/spinner';
 import { useSnackbar } from 'notistack';
 import Lottie from 'react-lottie-player';
 import LoginAmination from '../loaders/login.json';
+
 export function AuthenticationForm(props: PaperProps) {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { SetStoreError } = UseErrorStore();
   const [Loading, SetLoading] = useState(false);
   const [type, toggle] = useToggle(['login', 'register']);
+  const { setIsLoggedIn } = useLoginStore();
   // wherever you call toggle, reset the form
   const handleToggle = () => {
     toggle();
@@ -79,8 +81,10 @@ export function AuthenticationForm(props: PaperProps) {
       SetLoading(false);
       return;
     }
-    // console.log('User data:from login', data);
+    setIsLoggedIn(true);
+    console.log('navigate called start');
     navigate('/home');
+    console.log('navigate called end');
     SetLoading(false);
   };
 
@@ -172,7 +176,7 @@ export function AuthenticationForm(props: PaperProps) {
   };
 
   return (
-    <div className="flex h-full justify-center  bg-slate-400">
+    <div className="flex h-full justify-center ">
       {/* <Lottie
         loop
         animationData={LoginAmination}
@@ -180,7 +184,7 @@ export function AuthenticationForm(props: PaperProps) {
       /> */}
       <div className="flex items-center justify-center">
         <Paper
-          className=" h-4/6 w-[440px] "
+          className=" h-auto w-[440px] "
           shadow="md"
           radius="md"
           p="xl"

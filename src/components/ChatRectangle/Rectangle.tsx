@@ -184,11 +184,11 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   const profilePictureSrc = parsedData.user.user_metadata.avatar_url;
   const CurrentUserId =
     parsedData.user.user_metadata.email || parsedData.user.email;
-  console.log('current users id', CurrentUserId);
-  console.log('avatar url ', profilePictureSrc);
-  console.log('name is ', name);
-  console.log('list of users from zustand state', userss);
-  console.log('list of online users  ', onlineUsers);
+  // console.log('current users id', CurrentUserId);
+  // console.log('avatar url ', profilePictureSrc);
+  // console.log('name is ', name);
+  // console.log('list of users from zustand state', userss);
+  // console.log('list of online users  ', onlineUsers);
 
   // const { message } = useMessageStore();
   const handleUserClick = async (user: User, index: number) => {
