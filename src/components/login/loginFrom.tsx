@@ -80,9 +80,9 @@ export function AuthenticationForm(props: PaperProps) {
       return;
     }
     setIsLoggedIn(true);
-    console.log('navigate called start');
+    // console.log('navigate called start');
     navigate('/home');
-    console.log('navigate called end');
+    //  console.log('navigate called end');
     SetLoading(false);
   };
 
