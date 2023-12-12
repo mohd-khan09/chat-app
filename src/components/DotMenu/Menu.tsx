@@ -10,9 +10,10 @@ import {
 import { useState } from 'react';
 import ThreeDots from '../SVGs/three-dots-vertical';
 import supabase from '../SupabaseCleint/supabaseclient';
-
+import { useNavigate } from 'react-router-dom';
 const DotMenu = () => {
   const [opened, setOpened] = useState(false);
+  const navigate = useNavigate();
   const handleToggle = () => {
     setOpened(!opened); // Toggle the state when the button is clicked
   };
@@ -23,8 +24,7 @@ const DotMenu = () => {
     if (error) {
       // console.log(error);
     } else {
-      window.location.reload();
-      // navigate('/home');
+      navigate('/home');
       // console.log('navigate called');
     }
   };
