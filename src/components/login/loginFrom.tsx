@@ -128,7 +128,8 @@ export function AuthenticationForm(props: PaperProps) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'http://localhost:5173/home',
+        redirectTo:
+          'https://chat-ejzgp7pn2-khans-projects-47a7bdf8.vercel.app/home',
       },
     });
     if (error) {
@@ -149,7 +150,8 @@ export function AuthenticationForm(props: PaperProps) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: 'http://localhost:5173/home',
+        redirectTo:
+          'https://chat-ejzgp7pn2-khans-projects-47a7bdf8.vercel.app/home',
       },
     });
     if (error) {
