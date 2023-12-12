@@ -22,8 +22,6 @@ import { useNavigate } from 'react-router-dom';
 import { UseErrorStore, useLoginStore } from '../../store';
 import Spinner from '../SVGs/spinner';
 import { useSnackbar } from 'notistack';
-import Lottie from 'react-lottie-player';
-import LoginAmination from '../loaders/login.json';
 
 export function AuthenticationForm(props: PaperProps) {
   const { enqueueSnackbar } = useSnackbar();
