@@ -46,7 +46,7 @@ const Rectangle: React.FC<RectangleBoxProps> = () => {
   const CurrentUserEmail =
     parsedData.user.user_metadata.email || parsedData.user.email;
   useEffect(() => {
-    const socketIo = io('http://localhost:3001');
+    const socketIo = io('https://chat-app-backend-1-6wmn.onrender.com');
     socketIo.emit('user_online', { username: CurrentUserEmail });
     // console.log('user name enmitted to backend');
     setSocket(socketIo);
