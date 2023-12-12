@@ -50,7 +50,8 @@ const ForgotPassword = () => {
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'http://localhost:5173/reset-password',
+      redirectTo:
+        'https://chat-ejzgp7pn2-khans-projects-47a7bdf8.vercel.app/reset-password',
     });
 
     if (error) {

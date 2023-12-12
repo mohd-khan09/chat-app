@@ -92,7 +92,8 @@ export function AuthenticationForm(props: PaperProps) {
       email: email,
       password: password,
       options: {
-        emailRedirectTo: 'http://localhost:5173/home',
+        emailRedirectTo:
+          'https://chat-ejzgp7pn2-khans-projects-47a7bdf8.vercel.app/home',
       },
     });
     if (error) {
